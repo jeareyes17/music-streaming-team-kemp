@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import pandas as pd
@@ -30,13 +30,13 @@ from streamlit import caching
 from sklearn.metrics.pairwise import euclidean_distances, manhattan_distances, cosine_similarity
 
 
-# In[2]:
+# In[ ]:
 
 
 st.title('Spotify Playlist Recommender Engine')
 
 
-# In[3]:
+# In[ ]:
 
 
 """
@@ -47,14 +47,14 @@ to help them rapidly increase exposure to finally get their big break?
 """
 
 
-# In[4]:
+# In[ ]:
 
 
 image = Image.open('eskwelabs.png')
 st.sidebar.image(image, caption='', use_column_width=True)
 
 
-# In[5]:
+# In[ ]:
 
 
 section = st.sidebar.radio("Sections",
@@ -62,7 +62,7 @@ section = st.sidebar.radio("Sections",
     "Recommender Engine","Strategy","Authors"))
 
 
-# In[6]:
+# In[ ]:
 
 
 if section == "Rationale":
@@ -74,7 +74,7 @@ if section == "Rationale":
     """
 
 
-# In[7]:
+# In[ ]:
 
 
 if section == "Methodology":
@@ -83,7 +83,7 @@ if section == "Methodology":
     st.image(imageEval,caption='', use_column_width=True)
 
 
-# In[8]:
+# In[ ]:
 
 
 if section =="Exploratory Data Analysis":
@@ -237,9 +237,42 @@ if section =="Exploratory Data Analysis":
 
     tempo = majority within 75-150 range.
     """
+    st.write("Comparing Main Dataframe with Viral Tracks")
+    for col in ['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']:
+        fig, ax = plt.subplots()
+        ax = sns.distplot(df[col], kde=True)
+        ax = sns.distplot(df_viraltracks[col], kde=True)
+        plt.title(col)
+        plt.ylabel('Frequency')
+        plt.show()
+        st.pyplot(fig)
+    #Viral DataFrame Audio Features Distribution
+    for col in ['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']:
+        fig, ax = plt.subplots()
+        ax = sns.distplot(df[col], kde=True)
+        ax = sns.distplot(df_mainstaytracks[col], kde=True)
+        plt.title(col)
+        plt.ylabel('Frequency')
+        plt.show()
+        st.pyplot(fig)
+    #Viral DataFrame Audio Features Distribution
+    for col in ['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']:
+        fig, ax = plt.subplots()
+        ax = sns.distplot(df[col], kde=True)
+        plt.title(col)
+        plt.ylabel('Frequency')
+        qx = sns.distplot(df_BenandBentracks[col], kde=True)
+        plt.show()
+        st.pyplot(fig)
 
 
-# In[9]:
+# In[ ]:
 
 
 if section == "Data and Tools":
@@ -292,7 +325,7 @@ if section == "Data and Tools":
                 "</table>",unsafe_allow_html=True)
 
 
-# In[10]:
+# In[ ]:
 
 
 if section == "Modelling for Genre Classfication":
@@ -306,7 +339,7 @@ if section == "Modelling for Genre Classfication":
     """
 
 
-# In[11]:
+# In[ ]:
 
 
 if section == "Evaluation":
@@ -334,7 +367,7 @@ if section == "Evaluation":
     """
 
 
-# In[12]:
+# In[ ]:
 
 
 if section == "Recommender Engine":
@@ -388,7 +421,7 @@ if section == "Recommender Engine":
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
-# In[13]:
+# In[ ]:
 
 
 if section == "Strategy":
@@ -399,7 +432,7 @@ if section == "Strategy":
     """
 
 
-# In[14]:
+# In[ ]:
 
 
 if section == "Authors":
