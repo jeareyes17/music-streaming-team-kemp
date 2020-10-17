@@ -353,7 +353,7 @@ if section == "Recommender Engine":
     chart_tracks_df['loudness'] = scaler.fit_transform(chart_tracks_df[['loudness']])
     chart_tracks_df['tempo'] =  scaler.fit_transform(chart_tracks_df[['tempo']])
     feature_cols = ['danceability', 'energy', 'loudness', 'speechiness', 'acousticness', 'instrumentalness',                'liveness', 'valence', 'tempo']
-    seed_track_data = chart_tracks_df[chart_tracks_df['track_name']=='Maybe The Night'].iloc[0]
+    seed_track_data = chart_tracks_df[chart_tracks_df['track_name']=='Kathang Isip'].iloc[0]
     
     # Eucledian
     chart_tracks_df['euclidean_dist'] = chart_tracks_df.apply(lambda x: euclidean_distances(x[feature_cols].values.reshape(-1, 1),                                                                  seed_track_data[feature_cols].values.reshape(-1, 1))                                                                  .flatten()[0], axis=1)
