@@ -1,0 +1,24 @@
+import pandas as pd
+import numpy as np
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+import streamlit as st
+import streamlit.components.v1 as components
+
+from sklearn.preprocessing import MinMaxScaler
+
+from bokeh.plotting import figure, output_file, show, output_notebook
+from bokeh.models import ColumnDataSource
+from bokeh.palettes import Spectral
+from bokeh.palettes import Spectral6, Magma, Inferno
+from bokeh.themes import built_in_themes
+from bokeh.io import curdoc
+
+from datetime import date, timedelta
+from IPython import get_ipython
+from PIL import Image
+from streamlit import caching
+
+from sklearn.metrics.pairwise import euclidean_distances, manhattan_distances, cosine_similarity
