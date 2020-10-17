@@ -58,26 +58,188 @@ st.sidebar.image(image, caption='', use_column_width=True)
 
 
 section = st.sidebar.radio("Sections",
-    ("Methodology","Exploratory Data Analysis","Data and Tools","Modelling for Genre Classfication","Evaluation",\
+    ("Rationale","Methodology","Exploratory Data Analysis","Data and Tools","Modelling for Genre Classfication","Evaluation",\
     "Recommender Engine","Strategy","Authors"))
 
 
 # In[6]:
 
 
-if section == "Methodology":
-    st.subheader('Methodology')
-    st.write('A playlist is recommended based on the results from the KNN and SVM analysis to check the accuracy of the model')
+if section == "Rationale":
+    """
+    Bean&Bean is a rising indie Filipino band that are looking for their big break.
+    Our team Kemp Records is tasked to help their music make it to the top
+    We want to devise a strategy for the band to take for their future music projects in line with those that are consistent in the top music charts and incorporate those qualities in their music.
+    Our baseline would be their style which is generally Folk and have a similar music style with Ben&Ben
+    """
 
 
 # In[7]:
 
 
-if section =="Exploratory Data Analysis":
-    st.subheader('Exploratory Data Analysis')
+if section == "Methodology":
+    st.subheader('Methodology')
+    imageEval = Image.open('methodology.jpg')
+    st.image(imageEval,caption='', use_column_width=True)
 
 
 # In[8]:
+
+
+if section =="Exploratory Data Analysis":
+    st.subheader('Exploratory Data Analysis')
+    df = pd.read_csv('data/merged_charts_tracks_datav2.csv')
+    fig, ax = plt.subplots()
+    ax = df.corr()
+    sns.heatmap(ax)
+    st.pyplot(fig)
+    df['date'] = pd.to_datetime(df['date'])
+    st.markdown('<h3>Characteristics of Viral Songs</h3>',unsafe_allow_html=True)
+    df_viral = df[df['is_viral']==1]
+    #groupby to remove duplicate entries of the same track_id
+    df_viral.groupby(['track_id','track_name','artist_name'])[['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']].mean()
+    #assign to new df df_viraltracks for EDA
+    df_viraltracks = df_viral.groupby(['track_id','track_name','artist_name'])[['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']].mean()
+    #Viral DataFrame Audio Features Distribution
+    for col in ['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']:
+        fig, ax = plt.subplots()
+        ax = sns.distplot(df_viraltracks[col], kde=True)
+        plt.title(col)
+        plt.ylabel('Frequency')
+        plt.show()
+        st.pyplot(fig)
+    """
+    # Audio Features Observations for Viral Tracks:
+
+    popularity = Skewed to the right, obviously most are going to have high popularity being a viral track and in the Top 200. Most are in the 70-90 range. However, what is notable is there are a number of tracks with low popularity which are still considered viral.
+
+    danceability = Skewed to the right, mostly 0.5 - 0.9. Viral tracks tend to be more danceable than the usual charting tracks.
+
+    energy = Almost normally distributed. Both low and high energy tracks can be viral.
+
+    key = Pitch (0 = do, 2 = re, 4 = mi, 5 = fa, 7 = sol, 9 = la, 11 = ti). Well distributed.
+
+    loudness = Skewed to the right, closely matches the distribution for all Spotify tracks. Majority seem to be in the -7.5dB range or higher.
+
+    mode = (Major = 1; Minor = 0) More tracks are using Major modality.
+
+    speechiness = (>0.66 = purely spoken words; 0.33 - 0.66 = both music and speech such as rap; <0.33 music and non-speech tracks)
+    Most values are between 0 - 0.1. 
+
+    acousticness = (0 not acoustic; 1 acoustic) Skewed to the left, though while most viral hits are not acoustic, the remaining share of more acoustic songs (>0.12 - 0.9) is more evenly distributed frequency wise.
+
+    instrumentalness = (0 has vocals; 0.5 - 1 no vocals) Majority of the tracks have vocals.
+
+    liveness = (0 not live ; 0.8 - 1 high chance to be live) Majority of the tracks aren't live and probably taken from the album versions.
+
+    valence = (0 sad/angry ; 1 happy/cheerful) Almost normal distribution with peak slightly to the left
+
+    tempo = peaks seen from 100-125 and 150-160. Nothing below 75 and not much above 175.
+    """
+    st.markdown('<h3>Characteristics of Mainstay Songs</h3>',unsafe_allow_html=True)
+    df_mainstay = df[df['is_mainstay']==1]
+    df_mainstay.groupby(['track_id','track_name','artist_name'])[['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness', 'streams',
+       'liveness', 'valence', 'tempo']].mean().head(10)
+    #assign to new df df_mainstaytracks for EDA
+    df_mainstaytracks = df_mainstay.groupby(['track_id','track_name','artist_name'])[['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness', 'streams',
+       'liveness', 'valence', 'tempo']].mean()
+    #Mainstay DataFrame Audio Features Distribution
+    for col in ['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']:
+        fig, ax = plt.subplots()
+        ax = sns.distplot(df_mainstaytracks[col], kde=True)
+        plt.title(col)
+        plt.ylabel('Frequency')
+        plt.show()
+        st.pyplot(fig)
+    """
+    # Audio Features Observations for Mainstay Tracks:
+
+    popularity = Mainstays are quite centered between the 60-90 range in popularity.
+
+    danceability = Almost normally distributed. Range is between 0.36 - 0.82. Peak at 0.7 range. Mainstay tracks tend to be more danceable.
+
+    energy = Almost normally distributed. Both low and high energy tracks can be mainstays. Peak is at 0.5.
+
+    key = Pitch (0 = do, 2 = re, 4 = mi, 5 = fa, 7 = sol, 9 = la, 11 = ti). Well distributed.
+
+    loudness = Skewed to the right, closely matches the distribution for all Spotify tracks. Though there is a notable dip in the -10 dB range.
+
+    mode = (Major = 1; Minor = 0) Even more tracks are using Major (1) modality.
+
+    speechiness = (>0.66 = purely spoken words; 0.33 - 0.66 = both music and speech such as rap; <0.33 music and non-speech tracks)
+    Most values are between 0 - 0.1. 
+
+    acousticness = (0 not acoustic; 1 acoustic) Skewed to the left, but not by much. Songs appear to be varied in terms of acousticness.
+
+    instrumentalness = (0 has vocals; 0.5 - 1 no vocals) Majority of the tracks have vocals. In fact, no mainstay track registered a value of above 0.3
+
+    liveness = (0 not live ; 0.8 - 1 high chance to be live) Majority of the tracks aren't live and probably taken from the album versions.
+
+    valence = (0 sad/angry ; 1 happy/cheerful) Almost normal distribution with peak slightly to the left
+
+    tempo = peaks seen from 125 - 140. Nothing below 75 and nothing above 162.
+    """
+    st.markdown('<h3>Characteristics of Ben&Ben Songs</h3>',unsafe_allow_html=True)
+    df_BenandBen = df[df['artist_name']=='Ben&Ben']
+    df_BenandBen.groupby(['track_id','track_name','artist_name'])[['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']].mean()
+    #assign to new df  for EDA
+    df_BenandBentracks = df_BenandBen.groupby(['track_id','track_name','artist_name'])[['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']].mean()
+    #Viral DataFrame Audio Features Distribution
+    for col in ['popularity', 'danceability', 'energy', 'key',
+       'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness',
+       'liveness', 'valence', 'tempo']:
+        fig, ax = plt.subplots()
+        ax = sns.distplot(df[col], kde=True)
+        plt.title(col)
+        plt.ylabel('Frequency')
+        sns.distplot(df_BenandBentracks[col], kde=True)
+        plt.show()
+        st.pyplot(fig)
+    """
+    # Audio Features Observations for Ben and Ben Tracks:
+
+    popularity = Ben & Ben songs are skewed to the right and are popular. Their tracks fall between the 57-71 range.
+
+    danceability = Almost normally distributed. Good mix in terms of danceability given the range of 0.31 - 0.67.
+
+    energy = Slightly skewed to the right. Ben&Ben has more above average energy tracks, but nothing too high.
+
+    key = Pitch (0 = do, 2 = re, 4 = mi, 5 = fa, 7 = sol, 9 = la, 11 = ti). Well distributed.
+
+    loudness = Slightly skewed to the right, though it is almost evenly distributed.
+
+    mode = All tracks are using 1 (Major) modality.
+
+    speechiness = (>0.66 = purely spoken words; 0.33 - 0.66 = both music and speech such as rap; <0.33 music and non-speech tracks)
+    Most values are around the 0.3 mark, which means most of their music are still focused on instruments but there appears to be a song with a higher value of 0.485. (Make It With You)
+
+    acousticness = (0 not acoustic; 1 acoustic) Skewed to the right, they have more tracks that are more acoustic sounding.
+
+    instrumentalness = (0 has vocals; 0.5 - 1 no vocals) All of the tracks have vocals as there's nothing that registered above 0.005 in insturmentalness.
+
+    liveness = (0 not live ; 0.8 - 1 high chance to be live) Majority of the tracks aren't live and probably taken from the album versions. One track registered 0.39 in liveness (Lifetime - the sounds of the starting few seconds is similar to that of a live track) Another registered 0.4 in liveness (Pagtingin, though i'm not sure why)
+
+    valence = (0 sad/angry ; 1 happy/cheerful) Slightly skewed to the left. Majority of the songs are within 0.5 valence and below which means more of their songs can be considered sadder.
+
+    tempo = majority within 75-150 range.
+    """
+
+
+# In[9]:
 
 
 if section == "Data and Tools":
@@ -130,7 +292,7 @@ if section == "Data and Tools":
                 "</table>",unsafe_allow_html=True)
 
 
-# In[9]:
+# In[10]:
 
 
 if section == "Modelling for Genre Classfication":
@@ -144,7 +306,7 @@ if section == "Modelling for Genre Classfication":
     """
 
 
-# In[10]:
+# In[11]:
 
 
 if section == "Evaluation":
@@ -172,7 +334,7 @@ if section == "Evaluation":
     """
 
 
-# In[11]:
+# In[12]:
 
 
 if section == "Recommender Engine":
@@ -203,7 +365,7 @@ if section == "Recommender Engine":
     fig, ax = plt.subplots()
     ax.hist(chart_tracks_df['euclidean_dist'], bins=20)
     st.pyplot(fig)
-    
+    st.set_option('deprecation.showPyplotGlobalUse', False)
     # Manhattan
     #get top 10 nearest to seed_track_data
     st.write('Manhattan Distribution')
@@ -213,7 +375,7 @@ if section == "Recommender Engine":
     fig, ax = plt.subplots()
     ax.hist(chart_tracks_df['manhattan_dist'], bins=20)
     st.pyplot(fig)
-    
+    st.set_option('deprecation.showPyplotGlobalUse', False)
     # Cosine
     #get top 10 nearest to seed_track_data
     st.write('Cosine Distribution')
@@ -223,9 +385,10 @@ if section == "Recommender Engine":
     fig, ax = plt.subplots()
     ax.hist(chart_tracks_df['cosine_dist'], bins=20)
     st.pyplot(fig)
+    st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
-# In[12]:
+# In[13]:
 
 
 if section == "Strategy":
@@ -236,7 +399,7 @@ if section == "Strategy":
     """
 
 
-# In[13]:
+# In[14]:
 
 
 if section == "Authors":
